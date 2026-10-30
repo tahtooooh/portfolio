@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Taha Hajji | Data Science Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
@@ -23,102 +23,18 @@
             color: #d0d8e0;
             line-height: 1.7;
             overflow-x: hidden;
-            cursor: none;
         }
 
         a { text-decoration: none; color: inherit; }
         .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
 
-        /* ─── CUSTOM CURSOR ─── */
-        .cursor {
-            position: fixed; top: 0; left: 0;
-            width: 12px; height: 12px;
-            background: #7ec8e3;
-            border-radius: 50%;
-            pointer-events: none; z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.08s ease;
-            transform: translate(-50%, -50%);
-        }
-        .cursor-follower {
-            position: fixed; top: 0; left: 0;
-            width: 40px; height: 40px;
-            border: 1.5px solid rgba(126,200,227,0.3);
-            border-radius: 50%;
-            pointer-events: none; z-index: 9998;
-            transition: all 0.25s ease;
-            transform: translate(-50%, -50%);
-        }
-        .cursor-follower.hover {
-            width: 60px; height: 60px;
-            border-color: rgba(126,200,227,0.5);
-            background: rgba(126,200,227,0.05);
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            .cursor, .cursor-follower { display: none; }
-            body { cursor: auto; }
-        }
-
-        /* ─── 3D CONTAINER ─── */
-        #three-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        /* ─── LIGHTWEIGHT AMBIENT BACKGROUND ─── */
+        .ambient-background {
+            position: fixed; inset: 0;
             pointer-events: none; z-index: 0;
-        }
-
-        /* ─── LOADING SCREEN ─── */
-        #loader {
-            position: fixed; inset: 0; z-index: 10000;
-            background: #0a0a0a;
-            display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-        #loader.hidden {
-            opacity: 0; visibility: hidden;
-            pointer-events: none;
-        }
-        .loader-content {
-            text-align: center;
-        }
-        .loader-icon {
-            font-size: 3rem; color: #7ec8e3;
-            margin-bottom: 24px;
-            animation: loaderPulse 1.2s ease-in-out infinite;
-        }
-        @keyframes loaderPulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        .loader-title {
-            font-size: 1rem; font-weight: 700; letter-spacing: 4px;
-            color: #7ec8e3; margin-bottom: 28px;
-        }
-        .loader-bar-track {
-            width: 320px; height: 3px;
-            background: rgba(126,200,227,0.08);
-            border-radius: 2px; overflow: hidden;
-            margin: 0 auto 16px;
-        }
-        .loader-bar {
-            height: 100%; width: 0%;
-            background: linear-gradient(90deg, #7ec8e3, #b8e2f2);
-            border-radius: 2px;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 20px rgba(126,200,227,0.2);
-        }
-        .loader-status {
-            font-size: 0.75rem; color: #5a6a78;
-            letter-spacing: 1px; font-weight: 500;
-        }
-
-        /* ─── MOUSE GLOW ─── */
-        .mouse-glow {
-            position: fixed; pointer-events: none; z-index: 0;
-            width: 500px; height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(126,200,227,0.04) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: left 0.3s ease, top 0.3s ease;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(126,200,227,0.09), transparent 30%),
+                radial-gradient(circle at 12% 72%, rgba(58,141,168,0.045), transparent 28%);
         }
 
         /* ─── NAV ─── */
@@ -126,7 +42,7 @@
             position: fixed; top: 0; left: 0; width: 100%;
             z-index: 1000;
             background: rgba(10,10,10,0.8);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(126,200,227,0.05);
             transition: background 0.5s, box-shadow 0.5s;
         }
@@ -182,10 +98,7 @@
         .hero::before {
             content: '';
             position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(126,200,227,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(126,200,227,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background: radial-gradient(circle at 72% 48%, rgba(126,200,227,0.055), transparent 24%);
             z-index: 0;
             pointer-events: none;
         }
@@ -273,18 +186,6 @@
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 12px 40px rgba(126,200,227,0.3);
         }
-        .btn-primary::before {
-            content: ''; position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, rgba(255,255,255,0.15), transparent, rgba(255,255,255,0.15), transparent);
-            animation: btnSpin 4s linear infinite;
-            opacity: 0; transition: opacity 0.4s;
-        }
-        .btn-primary:hover::before { opacity: 1; }
-        @keyframes btnSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
         .btn-primary span { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; }
 
         .btn-outline {
@@ -316,21 +217,14 @@
         .hero-avatar::before {
             content: '';
             position: absolute; inset: -4px; border-radius: 50%;
-            background: conic-gradient(#7ec8e3, #3a8da8, #7ec8e3, transparent, #7ec8e3);
+            border: 2px solid rgba(126,200,227,0.8);
+            box-shadow: 0 0 24px rgba(126,200,227,0.12);
             z-index: -1;
-            animation: spinGlow 6s linear infinite;
-            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
-            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
-        }
-        @keyframes spinGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
         .hero-avatar::after {
             content: '';
             position: absolute; inset: -12px; border-radius: 50%;
             border: 1px solid rgba(126,200,227,0.06);
-            animation: spinGlow 12s linear infinite reverse;
         }
         @keyframes avatarFloat {
             0%, 100% { transform: translateY(0); }
@@ -341,6 +235,10 @@
 
         /* ─── SECTION COMMON ─── */
         section { padding: 120px 0; position: relative; z-index: 1; }
+        section:not(.hero) {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 760px;
+        }
         .section-label {
             font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
             letter-spacing: 3.5px; color: #7ec8e3; margin-bottom: 10px;
@@ -357,16 +255,7 @@
             letter-spacing: -1px; line-height: 1.15;
         }
         .section-title .glow-text {
-            background: linear-gradient(135deg, #7ec8e3 0%, #b8e2f2 50%, #7ec8e3 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmerText 4s linear infinite;
-        }
-        @keyframes shimmerText {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            color: #7ec8e3;
         }
 
         /* ─── REVEAL ─── */
@@ -403,11 +292,9 @@
         .stagger.visible > *:nth-child(5) { transition-delay: 0.28s; opacity: 1; transform: translateY(0); }
         .stagger.visible > *:nth-child(6) { transition-delay: 0.34s; opacity: 1; transform: translateY(0); }
 
-        /* ─── TILT CARDS ─── */
+        /* ─── CARD MOTION ─── */
         .tilt-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            transform-style: preserve-3d;
-            will-change: transform;
         }
 
         /* ─── EDUCATION ─── */
@@ -709,7 +596,7 @@
         @media (max-width: 768px) {
             .nav-links {
                 display: none; position: absolute; top: 72px; left: 0; width: 100%;
-                background: rgba(10,10,10,0.98); backdrop-filter: blur(20px);
+                background: rgba(10,10,10,0.98); backdrop-filter: blur(12px);
                 flex-direction: column; gap: 0; padding: 16px 0;
                 border-bottom: 1px solid rgba(126,200,227,0.05);
             }
@@ -729,29 +616,23 @@
             section { padding: 80px 0; }
             .section-title { font-size: 1.6rem; }
         }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+            .reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger > * {
+                opacity: 1; transform: none;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ─── CUSTOM CURSOR ─── -->
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-follower" id="cursorFollower"></div>
-
-    <!-- ─── MOUSE GLOW ─── -->
-    <div class="mouse-glow" id="mouseGlow"></div>
-
-    <!-- ─── LOADING SCREEN ─── -->
-    <div id="loader">
-        <div class="loader-content">
-            <div class="loader-icon"><i class="fas fa-database"></i></div>
-            <div class="loader-title">INITIALIZING DATA PIPELINE</div>
-            <div class="loader-bar-track"><div class="loader-bar" id="loaderBar"></div></div>
-            <div class="loader-status" id="loaderStatus">Loading modules...</div>
-        </div>
-    </div>
-
-    <!-- ─── 3D DATA SCENE ─── -->
-    <div id="three-container"></div>
+    <div class="ambient-background" aria-hidden="true"></div>
 
     <!-- ─── NAV ─── -->
     <nav id="navbar">
@@ -789,7 +670,7 @@
             </div>
             <div class="hero-visual">
                 <div class="hero-avatar">
-                    <img src="taha_hajji-removebg-preview.png" alt="Taha Hajji" />
+                    <img src="taha-hajji.webp" alt="Taha Hajji" width="475" height="525" decoding="async" fetchpriority="high" />
                 </div>
 
             </div>
@@ -1040,296 +921,6 @@
     </footer>
 
     <script>
-        /* ─── CUSTOM CURSOR ─── */
-        const cursor = document.getElementById('cursor');
-        const follower = document.getElementById('cursorFollower');
-        const mouseGlow = document.getElementById('mouseGlow');
-        let mouseX = 0, mouseY = 0;
-
-        document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-            follower.style.left = mouseX + 'px';
-            follower.style.top = mouseY + 'px';
-            mouseGlow.style.left = mouseX + 'px';
-            mouseGlow.style.top = mouseY + 'px';
-        });
-
-        document.querySelectorAll('a, button, .btn, .skill-tag, .project-card').forEach(el => {
-            el.addEventListener('mouseenter', () => follower.classList.add('hover'));
-            el.addEventListener('mouseleave', () => follower.classList.remove('hover'));
-        });
-
-        /* ─── THREE.JS 3D DATA SCENE ─── */
-        const container = document.getElementById('three-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 22;
-
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        // Mouse tracking for 3D interaction
-        const mouse3D = { x: 0, y: 0, targetX: 0, targetY: 0 };
-        document.addEventListener('mousemove', e => {
-            mouse3D.targetX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse3D.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // ─── Centerpiece: Data Torus Knot ───
-        const knotGeo = new THREE.TorusKnotGeometry(2.2, 0.7, 128, 24);
-        const knotMat = new THREE.MeshPhysicalMaterial({
-            color: 0x7ec8e3,
-            emissive: 0x7ec8e3,
-            emissiveIntensity: 0.08,
-            metalness: 0.3,
-            roughness: 0.4,
-            transparent: true,
-            opacity: 0.25,
-            wireframe: false,
-        });
-        const knot = new THREE.Mesh(knotGeo, knotMat);
-        knot.position.y = 0.5;
-        scene.add(knot);
-
-        // wireframe overlay
-        const wireMat = new THREE.MeshBasicMaterial({
-            color: 0x7ec8e3,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.06,
-        });
-        const wire = new THREE.Mesh(knotGeo.clone(), wireMat);
-        wire.position.y = 0.5;
-        scene.add(wire);
-
-        // Surrounding ring
-        const ringGeo = new THREE.TorusGeometry(3.8, 0.03, 32, 64);
-        const ringMat = new THREE.MeshBasicMaterial({
-            color: 0x7ec8e3,
-            transparent: true,
-            opacity: 0.08,
-        });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 3;
-        ring.position.y = 0.5;
-        scene.add(ring);
-
-        const ring2 = new THREE.Mesh(
-            new THREE.TorusGeometry(4.6, 0.02, 32, 64),
-            new THREE.MeshBasicMaterial({ color: 0x7ec8e3, transparent: true, opacity: 0.04 })
-        );
-        ring2.rotation.x = -Math.PI / 4;
-        ring2.rotation.z = Math.PI / 6;
-        ring2.position.y = 0.5;
-        scene.add(ring2);
-
-        // ─── 3D Data Particles ───
-        const particleCount = 400;
-        const particlePositions = new Float32Array(particleCount * 3);
-        const particleSizes = new Float32Array(particleCount);
-        const particleSpeeds = [];
-        const particleBasePos = [];
-
-        for (let i = 0; i < particleCount; i++) {
-            const radius = 5 + Math.random() * 12;
-            const theta = Math.random() * Math.PI * 2;
-            const phi = Math.acos(2 * Math.random() - 1);
-            particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-            particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-            particlePositions[i * 3 + 2] = radius * Math.cos(phi);
-            particleSizes[i] = 0.5 + Math.random() * 1.5;
-            particleSpeeds.push(0.002 + Math.random() * 0.008);
-            particleBasePos.push({
-                x: particlePositions[i * 3],
-                y: particlePositions[i * 3 + 1],
-                z: particlePositions[i * 3 + 2],
-                angle: Math.random() * Math.PI * 2,
-                speed: 0.002 + Math.random() * 0.006,
-                radius: radius,
-            });
-        }
-
-        const particleGeo = new THREE.BufferGeometry();
-        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        particleGeo.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
-
-        const particleMat = new THREE.PointsMaterial({
-            color: 0x7ec8e3,
-            size: 0.08,
-            transparent: true,
-            opacity: 0.5,
-            blending: THREE.AdditiveBlending,
-            sizeAttenuation: true,
-        });
-        const particles3D = new THREE.Points(particleGeo, particleMat);
-        scene.add(particles3D);
-
-        // ─── Connection lines between nearby particles ───
-        const connectionLines = [];
-        function updateConnections() {
-            const positions = particles3D.geometry.attributes.position.array;
-            connectionLines.forEach(line => scene.remove(line));
-            connectionLines.length = 0;
-
-            for (let i = 0; i < particleCount; i++) {
-                for (let j = i + 1; j < particleCount; j++) {
-                    const dx = positions[i * 3] - positions[j * 3];
-                    const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-                    const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-                    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                    if (dist < 4) {
-                        const alpha = (1 - dist / 4) * 0.06;
-                        const geo = new THREE.BufferGeometry().setFromPoints([
-                            new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
-                            new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2]),
-                        ]);
-                        const mat = new THREE.LineBasicMaterial({
-                            color: 0x7ec8e3,
-                            transparent: true,
-                            opacity: alpha,
-                        });
-                        const line = new THREE.Line(geo, mat);
-                        scene.add(line);
-                        connectionLines.push(line);
-                    }
-                }
-            }
-        }
-
-        // ─── Floating data labels (Sprite) ───
-        const dataTerms = ['EDA', 'SQL', 'ETL', 'KPI', 'NLP', 'PCA', 'CLUSTER', 'AI', 'ML', 'PIPELINE'];
-        const sprites = [];
-        function createTextSprite(text) {
-            const canvas2 = document.createElement('canvas');
-            canvas2.width = 128;
-            canvas2.height = 48;
-            const ctx2 = canvas2.getContext('2d');
-            ctx2.font = 'bold 22px Inter, sans-serif';
-            ctx2.textAlign = 'center';
-            ctx2.textBaseline = 'middle';
-            ctx2.fillStyle = 'rgba(126, 200, 227, 0.12)';
-            ctx2.fillText(text, 64, 24);
-
-            const tex = new THREE.CanvasTexture(canvas2);
-            const mat = new THREE.SpriteMaterial({
-                map: tex,
-                transparent: true,
-                depthWrite: false,
-                blending: THREE.AdditiveBlending,
-            });
-            const sprite = new THREE.Sprite(mat);
-            const angle = Math.random() * Math.PI * 2;
-            const radius = 7 + Math.random() * 8;
-            sprite.position.set(
-                Math.cos(angle) * radius,
-                (Math.random() - 0.5) * 6,
-                Math.sin(angle) * radius
-            );
-            sprite.scale.set(2.5, 1, 1);
-            sprite.userData = { angle: angle, radius: radius, speed: 0.001 + Math.random() * 0.003, yOff: (Math.random() - 0.5) * 6 };
-            scene.add(sprite);
-            sprites.push(sprite);
-        }
-        dataTerms.forEach(t => createTextSprite(t));
-
-        // ─── Animation loop ───
-        let time = 0;
-        function animate3D() {
-            requestAnimationFrame(animate3D);
-            time += 0.005;
-
-            // Smooth mouse follow
-            mouse3D.x += (mouse3D.targetX - mouse3D.x) * 0.03;
-            mouse3D.y += (mouse3D.targetY - mouse3D.y) * 0.03;
-
-            // Rotate centerpiece
-            knot.rotation.x += 0.003;
-            knot.rotation.y += 0.006;
-            wire.rotation.x = knot.rotation.x;
-            wire.rotation.y = knot.rotation.y;
-            ring.rotation.z += 0.004;
-            ring2.rotation.z -= 0.003;
-
-            // Slight camera sway from mouse
-            camera.position.x = mouse3D.x * 2;
-            camera.position.y = mouse3D.y * 1.5 + 1;
-            camera.lookAt(0, 0, 0);
-
-            // Animate particles in sphere
-            const pos = particles3D.geometry.attributes.position.array;
-            for (let i = 0; i < particleCount; i++) {
-                const base = particleBasePos[i];
-                base.angle += base.speed;
-                const wobble = Math.sin(time * 2 + i) * 0.3;
-                const r = base.radius + wobble;
-                pos[i * 3] = r * Math.cos(base.angle) * Math.sin(time * 0.3 + i * 0.1);
-                pos[i * 3 + 1] = r * Math.sin(base.angle) * Math.sin(time * 0.3 + i * 0.1) + Math.sin(time + i) * 0.5;
-                pos[i * 3 + 2] = r * Math.cos(time * 0.3 + i * 0.1);
-            }
-            particles3D.geometry.attributes.position.needsUpdate = true;
-
-            // Update connections every few frames
-            if (Math.floor(time * 60) % 10 === 0) updateConnections();
-
-            // Rotate sprites
-            sprites.forEach(s => {
-                s.userData.angle += s.userData.speed;
-                s.position.x = Math.cos(s.userData.angle) * s.userData.radius;
-                s.position.z = Math.sin(s.userData.angle) * s.userData.radius;
-                s.position.y = s.userData.yOff + Math.sin(time + s.userData.angle) * 1;
-            });
-
-            renderer.render(scene, camera);
-        }
-        animate3D();
-
-        /* ─── LOADING SCREEN ─── */
-        const loader = document.getElementById('loader');
-        const loaderBar = document.getElementById('loaderBar');
-        const loaderStatus = document.getElementById('loaderStatus');
-        const statusMessages = [
-            'Loading modules...',
-            'Connecting to data sources...',
-            'Initializing analytics engine...',
-            'Running ETL pipelines...',
-            'Optimizing data models...',
-            'System ready'
-        ];
-        let loadProgress = 0;
-
-        function advanceLoader() {
-            loadProgress += Math.random() * 12 + 3;
-            if (loadProgress > 100) loadProgress = 100;
-            loaderBar.style.width = loadProgress + '%';
-
-            const msgIdx = Math.min(
-                Math.floor((loadProgress / 100) * statusMessages.length),
-                statusMessages.length - 1
-            );
-            loaderStatus.textContent = statusMessages[msgIdx];
-
-            if (loadProgress < 100) {
-                setTimeout(advanceLoader, 200 + Math.random() * 300);
-            } else {
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                }, 500);
-            }
-        }
-        setTimeout(advanceLoader, 400);
-
         /* ─── TYPING EFFECT ─── */
         const typedText = document.getElementById('typedText');
         const phrases = [
@@ -1342,6 +933,13 @@
         let charIdx = 0;
         let isDeleting = false;
         let typeSpeed = 60;
+        let typingTimer;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function scheduleTyping(delay) {
+            clearTimeout(typingTimer);
+            if (!document.hidden) typingTimer = setTimeout(typeEffect, delay);
+        }
 
         function typeEffect() {
             const current = phrases[phraseIdx];
@@ -1351,7 +949,7 @@
                 if (charIdx === current.length) {
                     isDeleting = true;
                     typeSpeed = 1200;
-                    setTimeout(typeEffect, typeSpeed);
+                    scheduleTyping(typeSpeed);
                     return;
                 }
                 typeSpeed = 40 + Math.random() * 30;
@@ -1362,74 +960,22 @@
                     isDeleting = false;
                     phraseIdx = (phraseIdx + 1) % phrases.length;
                     typeSpeed = 300;
-                    setTimeout(typeEffect, typeSpeed);
+                    scheduleTyping(typeSpeed);
                     return;
                 }
                 typeSpeed = 20 + Math.random() * 20;
             }
-            setTimeout(typeEffect, typeSpeed);
+            scheduleTyping(typeSpeed);
         }
-        setTimeout(typeEffect, 1200);
-
-        /* ─── COUNTER ANIMATION ─── */
-        function animateCounters() {
-            document.querySelectorAll('.counter:not([data-animated])').forEach(el => {
-                const target = parseInt(el.getAttribute('data-target'));
-                const duration = 2000;
-                const start = performance.now();
-                el.setAttribute('data-animated', 'true');
-                function update(now) {
-                    const elapsed = now - start;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const ease = 1 - Math.pow(1 - progress, 3);
-                    el.textContent = Math.floor(ease * target);
-                    if (progress < 1) requestAnimationFrame(update);
-                    else el.textContent = target;
-                }
-                requestAnimationFrame(update);
+        if (reducedMotion) {
+            typedText.textContent = phrases[0];
+        } else {
+            scheduleTyping(700);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) clearTimeout(typingTimer);
+                else scheduleTyping(300);
             });
         }
-        animateCounters();
-
-        /* ─── 3D TILT ON CARDS WITH DEPTH ─── */
-        document.querySelectorAll('.tilt-card').forEach(card => {
-            const shine = document.createElement('div');
-            shine.style.cssText =
-                'position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;' +
-                'background:radial-gradient(circle at 50% 50%,rgba(126,200,227,0.06),transparent 60%);' +
-                'opacity:0;transition:opacity 0.3s;';
-            card.style.position = 'relative';
-            card.style.overflow = 'hidden';
-            card.style.transformStyle = 'preserve-3d';
-            card.appendChild(shine);
-
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / centerY * -12;
-                const rotateY = (x - centerX) / centerX * 12;
-
-                card.style.transform =
-                    `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
-                card.style.transition = 'transform 0.08s ease';
-
-                shine.style.background =
-                    `radial-gradient(circle at ${x / rect.width * 100}% ${y / rect.height * 100}%, rgba(126,200,227,0.1), transparent 60%)`;
-                shine.style.opacity = '1';
-
-                // Light on content
-                card.style.setProperty('--light-x', (x / rect.width * 100) + '%');
-                card.style.setProperty('--light-y', (y / rect.height * 100) + '%');
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
-                card.style.transition = 'transform 0.5s ease';
-                shine.style.opacity = '0';
-            });
-        });
 
         /* ─── SCROLL REVEAL ─── */
         const revealElements = document.querySelectorAll('.reveal, .stagger');
@@ -1437,20 +983,11 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    // trigger counters inside
-                    if (entry.target.querySelector('.counter')) {
-                        animateCounters();
-                    }
+                    revealObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
         revealElements.forEach(el => revealObserver.observe(el));
-
-        /* ─── NAVBAR ─── */
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 40);
-        });
 
         /* ─── MOBILE MENU ─── */
         const toggle = document.getElementById('menuToggle');
@@ -1460,17 +997,45 @@
             a.addEventListener('click', () => navLinks.classList.remove('open'));
         });
 
-        /* ─── ACTIVE NAV LINK ─── */
-        const sections = document.querySelectorAll('section[id]');
-        window.addEventListener('scroll', () => {
+        /* ─── SCROLL STATE ─── */
+        const navbar = document.getElementById('navbar');
+        const sections = [...document.querySelectorAll('section[id]')];
+        const navigationLinks = [...document.querySelectorAll('.nav-link')];
+        let sectionOffsets = [];
+        let scrollFramePending = false;
+
+        function cacheSectionOffsets() {
+            sectionOffsets = sections.map(section => ({
+                id: section.id,
+                top: section.offsetTop - 150
+            }));
+        }
+
+        function updateScrollState() {
+            const scrollPosition = window.scrollY;
             let current = '';
-            sections.forEach(s => {
-                const top = s.offsetTop - 150;
-                if (window.scrollY >= top) current = s.getAttribute('id');
+            navbar.classList.toggle('scrolled', scrollPosition > 40);
+            sectionOffsets.forEach(section => {
+                if (scrollPosition >= section.top) current = section.id;
             });
-            document.querySelectorAll('.nav-link').forEach(a => {
-                a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+            navigationLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + current);
             });
+            scrollFramePending = false;
+        }
+
+        function requestScrollUpdate() {
+            if (scrollFramePending) return;
+            scrollFramePending = true;
+            requestAnimationFrame(updateScrollState);
+        }
+
+        cacheSectionOffsets();
+        updateScrollState();
+        window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+        window.addEventListener('resize', () => {
+            cacheSectionOffsets();
+            requestScrollUpdate();
         });
     </script>
 </body>
